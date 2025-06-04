@@ -1,0 +1,66 @@
+# Build directories
+build/
+dist/
+*.o
+*.obj
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Logs
+logs/
+*.log
+
+# Dependencies
+node_modules/
+vendor/
+
+# Compiled files
+*.exe
+*.out
+*.app
+*.dll
+*.dylib
+*.so
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 
