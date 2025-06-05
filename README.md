@@ -1,37 +1,25 @@
 # IoT Sensor WebSocket API
 
-A WebSocket server for IoT sensor data collection with API key authentication.
+A secure WebSocket API for IoT sensor data management with built-in security features including rate limiting, DoS protection, and permission-based access control.
 
 ## Features
 
-- Fast WebSocket communication
-- API key authentication
-- JSON-based sensor data format
-- Support for various sensor types and units
-- Real-time data validation
-- Thread-safe implementation
+- 🔐 Secure WebSocket server with API key authentication
+- 🚦 Rate limiting (100 requests/60 seconds per client)
+- 🛡️ DoS protection (50 connections/60 seconds per IP)
+- 👥 Permission-based access control
+- 📊 PostgreSQL database integration
+- 🔄 Real-time sensor data processing
+- 📝 JSON-based data format
 
 ## Prerequisites
 
-- CMake (>= 3.10)
+- Docker and Docker Compose
 - C++17 compatible compiler
-- OpenSSL
-- Boost
-- nlohmann-json
+- CMake 3.10 or higher
+- Python 3.x (for test client)
 
-### Installing Dependencies
-
-#### macOS
-```bash
-brew install openssl boost nlohmann-json
-```
-
-#### Ubuntu/Debian
-```bash
-sudo apt-get install libssl-dev libboost-all-dev nlohmann-json3-dev
-```
-
-## Building
+## Quick Start
 
 1. Clone the repository:
 ```bash
@@ -39,106 +27,130 @@ git clone <repository-url>
 cd iot-sensor
 ```
 
-2. Create a build directory:
+2. Create and configure the environment file:
 ```bash
-mkdir build && cd build
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-3. Configure and build:
+3. Build and run with Docker:
 ```bash
-cmake ..
-make
+docker-compose up --build
 ```
 
-## Running the Server
-
+4. Run the test client (in a new terminal):
 ```bash
-./iot_sensor_api
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python test_client.py
 ```
 
-The server will start listening on port 9002.
+## Configuration
 
-## API Usage
+Create a `.env` file with the following variables:
+
+```env
+# Server Configuration
+WEBSOCKET_PORT=9002
+MAX_CONNECTIONS=1000
+
+# Security Settings
+RATE_LIMIT_REQUESTS=100
+RATE_LIMIT_WINDOW=60
+DOS_MAX_CONNECTIONS=50
+DOS_WINDOW=60
+
+# Database Configuration
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=iot_sensors
+POSTGRES_USER=your_username
+POSTGRES_PASSWORD=your_password
+
+# API Keys (comma-separated)
+VALID_API_KEYS=test-api-key-12345678901234567890123456789012
+```
+
+## API Documentation
 
 ### Authentication
-
-Connect to the WebSocket server (ws://localhost:9002) and send an authentication message:
-
 ```json
 {
-    "api_key": "your-api-key-here"
+    "api_key": "your-api-key"
 }
 ```
 
-### Sending Sensor Data
-
-After authentication, send sensor readings in the following format:
-
+### Sensor Data Format
 ```json
 {
     "sensor_data": {
-        "sensor_id": "sensor123",
+        "sensor_id": "temp_sensor_001",
         "type": "temperature",
         "value": 23.5,
-        "timestamp": 1634567890,
+        "timestamp": 1234567890,
         "unit": "celsius",
         "metadata": {
             "location": "room1",
-            "calibration_date": "2023-01-01"
+            "calibration_date": "2024-01-01"
         }
     }
 }
 ```
 
 ### Supported Sensor Types
+- temperature (celsius)
+- humidity (percent)
+- pressure (pascal)
+- light (lux)
 
-- temperature
-- humidity
-- pressure
-- light
-- motion
-- sound
-- air_quality
-- voltage
-- current
+## Security Features
 
-### Supported Units
+### Rate Limiting
+- Default: 100 requests per 60 seconds per client
+- Configurable via environment variables
 
-- celsius
-- fahrenheit
-- kelvin
-- percent
-- pascal
-- hpa
-- lux
-- db
-- volt
-- ampere
-- ppm
+### DoS Protection
+- Default: 50 connections per 60 seconds per IP
+- Configurable via environment variables
 
-## Error Handling
+### Permission Levels
+- READ_SENSOR: Read sensor data
+- WRITE_SENSOR: Send sensor data
+- MANAGE_SENSORS: Add/remove sensors
+- ADMIN: Full access
 
-The server will respond with error messages in the following format:
+## Development
 
-```json
-{
-    "error": "Error message here"
-}
+### Building Locally
+
+```bash
+mkdir build && cd build
+cmake ..
+make
 ```
 
-Common error types:
-- Invalid API key
-- Not authenticated
-- Invalid JSON format
-- Invalid sensor data format
-- Invalid sensor type or unit
+### Running Tests
 
-## Security Considerations
+```bash
+cd build
+ctest
+```
 
-- API keys must be at least 32 characters long
-- Only alphanumeric characters and hyphens are allowed in API keys
-- For production use, it's recommended to set up TLS/SSL termination using a reverse proxy
+## Docker Support
+
+The project includes:
+- `Dockerfile` for the main application
+- `docker-compose.yml` for orchestrating the application and database
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 ## License
 
-MIT License 
+[Your License Here] 

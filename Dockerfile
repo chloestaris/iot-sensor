@@ -9,7 +9,18 @@ RUN apt-get update && apt-get install -y \
     nlohmann-json3-dev \
     git \
     wget \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Install libpqxx from source (for latest version with proper CMake support)
+RUN wget https://github.com/jtv/libpqxx/archive/refs/tags/7.7.5.tar.gz && \
+    tar xvf 7.7.5.tar.gz && \
+    cd libpqxx-7.7.5 && \
+    cmake -B build . && \
+    cmake --build build && \
+    cmake --install build && \
+    cd .. && \
+    rm -rf libpqxx-7.7.5 7.7.5.tar.gz
 
 # Install WebSocket++
 RUN wget https://github.com/zaphoyd/websocketpp/archive/refs/tags/0.8.2.tar.gz && \

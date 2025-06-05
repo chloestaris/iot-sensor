@@ -102,4 +102,4 @@ async def run_tests():
 if __name__ == "__main__":
     print("IoT Sensor API Test Client")
     print("=========================")
-    asyncio.get_event_loop().run_until_complete(run_tests()) 
+    asyncio.run(run_tests()) 
